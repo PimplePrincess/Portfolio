@@ -1,0 +1,85 @@
+4143 Тегай Е.Д.
+
+1) 
+SELECT DISTINCT R1.ФИЛИАЛ
+FROM R2 RIGHT JOIN R3 ON R2.НОМЕР_ДОГОВОРА = R3.НОМЕР_ДОГОВОРА
+LEFT JOIN R1 ON R2.ФИЛИАЛ = R1.ФИЛИАЛ
+WHERE R1.СТРАНА <> R3.СТРАНА
+
+2) 
+SELECT DISTINCT R3.КЛИЕНТ
+FROM R3 JOIN R2 ON R2.НОМЕР_ДОГОВОРА = R3.НОМЕР_ДОГОВОРА
+GROUP BY R3.КЛИЕНТ 
+HAVING COUNT (DISTINCT R2.НОМЕР_ДОГОВОРА) > 1 
+AND COUNT (DISTINCT R2.ФИЛИАЛ) > 1
+
+3)
+SELECT DISTINCT R3.СТРАНА
+FROM R3
+WHERE R3.СТРАНА NOT IN (SELECT DISTINCT R1.СТРАНА FROM R1)
+
+4)
+SELECT DISTINCT R1.ГОРОД
+FROM R1
+WHERE R1.ГОРОД NOT IN (
+SELECT DISTINCT R1.ГОРОД
+FROM R1 RIGHT JOIN R2 ON R1.ФИЛИАЛ = R2.ФИЛИАЛ 
+)
+
+5)
+SELECT DISTINCT R3.СТРАНА
+FROM R3 JOIN R2 ON R3.НОМЕР_ДОГОВОРА = R2.НОМЕР_ДОГОВОРА
+JOIN R1 ON R2.ФИЛИАЛ =  R1.ФИЛИАЛ
+GROUP BY R3.СТРАНА
+HAVING COUNT (DISTINCT R1.СТРАНА)= 1
+
+6)
+SELECT R1.ФИО
+FROM R1
+WHERE R1.ФИО NOT IN (
+SELECT DISTINCT R2.ФИО
+FROM R2
+WHERE R2.ТИП <> 'Л'
+)
+
+7)
+SELECT DISTINCT R1.КАФЕДРА
+FROM R1 LEFT JOIN R2 ON R1.ФИО = R2.ФИО
+AND R2.ТИП = 'КП'
+WHERE R2.ТИП IS NULL 
+
+8)
+SELECT DISTINCT R3.КУРС
+FROM R3 RIGHT JOIN R2 ON R3.ДИСЦИПЛИНА = R2.ДИСЦИПЛИНА
+WHERE R2.ФИО IN (
+SELECT DISTINCT R1.ФИО 
+FROM R1
+WHERE R1.КАФЕДРА = 44
+)
+
+9)
+SELECT R1.КАФЕДРА
+FROM R1
+WHERE R1.КАФЕДРА NOT IN(
+SELECT DISTINCT R1.КАФЕДРА
+FROM R1 LEFT JOIN R2 ON R1.ФИО = R2.ФИО 
+LEFT JOIN R3 ON R2.ДИСЦИПЛИНА=R3.ДИСЦИПЛИНА 
+WHERE R3.КУРС >2
+)
+
+10)
+SELECT DISTINCT R2.ДИСЦИПЛИНА
+FROM R2 LEFT JOIN R1 ON R2.ФИО = R1.ФИО
+WHERE R2.ТИП = 'Л' 
+GROUP BY R2.ДИСЦИПЛИНА
+HAVING COUNT (DISTINCT R1.КАФЕДРА) > 1;
+
+
+
+
+
+
+
+
+
+
